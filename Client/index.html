@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./csc3221.css">
+</head>
+<style>
+
+#centered-flexbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: auto;
+  width: 100%;
+  padding: 10px;
+}
+.checkmark-button {
+  border: 2px solid #4CAF50; /* Green */
+  color: #4CAF50;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+  background: transparent;
+}
+.inactive {
+  background-color: #FFFFFF; /* White */
+  color: #000000; /* Black */
+}
+
+.active {
+  background-color: #4CAF50; /* Green */
+  color: #FFFFFF; /* White */
+}
+.delete-button {
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.TaskObj {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 50vw;
+  max-width: 90vw;
+  height: 1;
+  position: relative;
+
+}
+
+.task-text {
+  /* flex-grow: 1; */
+  /* margin: 0 10px; Add some margin around the text for better appearance */
+  min-width: 20%;
+  width: 40%;
+  text-align: left;
+  padding: 5px;
+}
+
+.delete-button-container {
+  position: absolute;
+  right: 0;
+  width: 50px; /* Adjust as needed */
+  height: 100%;
+}
+
+
+.delete-button {
+    position: absolute;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.delete-button-container:hover .delete-button {
+  opacity: 1;
+}
+</style>
+<!-- https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio -->
+
+<body>
+    <h1>Hello</h1>
+    <button id="Hello">Add</button>
+
+    <div id="centered-flexbox">
+        <h3>Todo list</h3>
+
+     
+        <!-- All list elements will go here -->
+        <div class="List">
+                
+
+        </div>
+    </div>
+    <script src="corehttp.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
