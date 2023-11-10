@@ -60,7 +60,6 @@ function DeleteTodo(key){
     // var element = document.getElementById(key);
 
     let element = key;
-    //TODO: Implement
     //Send to server to delete
     console.log(`Deleting: ${key.id}`);
     Remove(key.id.slice(1));
@@ -93,24 +92,29 @@ function MakeTodo(key, item, isDone){
     //handles new object and preexisting object (from the database)
     if(key != -1){
         //Add the text 
-        html += `<p class="task-text" ondblclick="EditTodo(${key})">`
+        html += `<div class="task-text" ondblclick="EditTodo(${key})"`
         
         //If the item is allredy done
         if(isDone == true){
             console.log(`${key}: ${isDone}`)
-            html += `<s>${item}</s>`
+            // html += `<s>${item}</s>`
+            html +=  ` style="text-decoration: line-through;">`
+
         } else {
-            html += `${item}`
+            html += `>`;
 
         }
-        html += `</p>`;
+
+        html += `${item}`;
+
+        html += `</div>`;
         
     } else {
-        html += `<p class="task-text">${item}</p>`;
+        html += `<div class="task-text"  class="task-text">${item}</div>`;
     }
 
     //Add the delete button
-    html += `<div class="delete-button-container"><button class="delete-button" ondblclick="DeleteTodo(${key})">Delete</button></div></div>`;
+    html += `<button class="delete-button" ondblclick="DeleteTodo(${key})">Delete</button></div>`;
 
     return html;
 }
@@ -249,7 +253,7 @@ testB.addEventListener('click', async function() {
 async function LoadTodos() {
     return http.get(URL)
         .then(response => {
-            // console.log(response.task);
+            console.log(response.task);
             // let json = JSON.parse(response);
             
             for(let i = 0; i < response.task.length; i++){
