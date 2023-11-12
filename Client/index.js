@@ -13,7 +13,20 @@ let neoNotSet = false;
 
 const URL = "http://localhost:8080/api"
 
-
+/**
+ * Removes html injection from string
+ * @param {string} str The value to check
+ * @returns String
+ */
+function HtmlToString(str){
+    // test case: <a href="https://www.google.com">Google</a>
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
 /**
  * Edits the TaskObj text 
@@ -29,7 +42,7 @@ function EditTodo(key) {
     // Get the task text and replace it with an input field
     let taskText = taskItem.querySelector('.task-text');
     let oldValue = taskText.textContent;
-    taskText.innerHTML = `<input type="text" id="input${key}" value="${oldValue}">`;
+    taskText.innerHTML = `<input type="text" id="input${key}" class="textEdit" value="${oldValue}">`;
 
     // Focus the input field
     let input = document.getElementById(`input${key}`);
@@ -84,7 +97,12 @@ function MakeTodo(key, item, isDone){
     let html = `<div class="TaskObj" id=${key}>`;
 
     //Add the check mark button
-    html +=  `<button class="checkmark-button" completed=${isDone} onclick="SetTodoStatus(${key})">✔</button>`;
+    html +=  `<button class="checkmark-button" completed=${isDone} onclick="SetTodoStatus(${key})">`; 
+    
+    if(isDone===true){
+        html += `✔`;
+    }
+    html +=  `</button>`;
  
     //Add the text
     // html += `<p class="task-text" ondblclick="EditTodo(${key})">${item}</p>`;
@@ -105,12 +123,12 @@ function MakeTodo(key, item, isDone){
 
         }
 
-        html += `${item}`;
+        html += `${HtmlToString(item)}`;
 
         html += `</div>`;
         
     } else {
-        html += `<div class="task-text"  class="task-text">${item}</div>`;
+        html += `<div class="task-text"  class="task-text">${HtmlToString(item)}</div>`;
     }
 
     //Add the delete button
@@ -147,8 +165,11 @@ async function SetTodoStatus(key, override) {
 
             if(state===true){
                 text.style.textDecoration = 'line-through';
+                key.querySelector('.checkmark-button').innerHTML=`✔`;
             }else {
                 text.style.textDecoration = 'none';
+                key.querySelector('.checkmark-button').innerHTML=``;
+
             }
         }
     }
