@@ -33,12 +33,12 @@ function HtmlToString(str){
  * @param {*} key the TaskObj id to edit
  */
 function EditTodo(key) {
-    console.log(key)
+    //Somehow the key is the whole html for the thing im looking for so...
+
     // Get the task item by its id
     // let taskItem = document.getElementById(key);
     let taskItem = key;
 
-    console.log(taskItem.id)
     // Get the task text and replace it with an input field
     let taskText = taskItem.querySelector('.task-text');
     let oldValue = taskText.textContent;
@@ -52,16 +52,9 @@ function EditTodo(key) {
     input.onblur = () => {
         taskText.textContent = input.value;
 
-
         //Update the database
-        // console.log(key);
         const isToggled = key.querySelector('.checkmark-button').getAttribute('completed') === 'true';
-        // console.log(`Update ${key.id.slice(1)} : ${isToggled}, ${taskText.textContent}`);
         Update(key.id.slice(1), taskText.textContent, isToggled);
-
-
-
-
     };
 }
 
@@ -70,17 +63,13 @@ function EditTodo(key) {
  * @param {*} key the key to deleat
  */
 function DeleteTodo(key){
-    // var element = document.getElementById(key);
-
     let element = key;
+
     //Send to server to delete
-    console.log(`Deleting: ${key.id}`);
+    // console.log(`Deleting: ${key.id}`);
     Remove(key.id.slice(1));
 
     element.parentNode.removeChild(element);
-
-
-
 }
 
 
@@ -92,7 +81,6 @@ function DeleteTodo(key){
  * @returns the html text
  */
 function MakeTodo(key, item, isDone){
-    console.log(key);
 
     let html = `<div class="TaskObj" id=${key}>`;
 
@@ -104,9 +92,6 @@ function MakeTodo(key, item, isDone){
     }
     html +=  `</button>`;
  
-    //Add the text
-    // html += `<p class="task-text" ondblclick="EditTodo(${key})">${item}</p>`;
-
     //handles new object and preexisting object (from the database)
     if(key != -1){
         //Add the text 
@@ -114,19 +99,14 @@ function MakeTodo(key, item, isDone){
         
         //If the item is allredy done
         if(isDone == true){
-            console.log(`${key}: ${isDone}`)
             // html += `<s>${item}</s>`
             html +=  ` style="text-decoration: line-through;">`
-
         } else {
             html += `>`;
-
         }
 
         html += `${HtmlToString(item)}`;
-
         html += `</div>`;
-        
     } else {
         html += `<div class="task-text"  class="task-text">${HtmlToString(item)}</div>`;
     }
@@ -150,26 +130,22 @@ async function SetTodoStatus(key, override) {
         let text = task.querySelector('.task-text');
         if (text) {
             let state = !(key.querySelector('.checkmark-button').getAttribute('completed') === 'true');
-            console.log(state)
             if(override != null){
                 state = override;
             }
 
             key.querySelector('.checkmark-button').setAttribute('completed', state);
             //Send http request
-            console.log(`Update ${key.id.slice(1)} : ${state}, ${text.textContent}`)
             Update(key.id.slice(1), text.textContent, state);
-            // http.put(url,{})
 
 
-
+            //adds the check mark to the item
             if(state===true){
                 text.style.textDecoration = 'line-through';
                 key.querySelector('.checkmark-button').innerHTML=`✔`;
             }else {
                 text.style.textDecoration = 'none';
                 key.querySelector('.checkmark-button').innerHTML=``;
-
             }
         }
     }
@@ -181,9 +157,10 @@ async function SetTodoStatus(key, override) {
  * @param {*} newId the new id
  */
 function SetUnassigned(newId) {
-    console.log("Hello")
+    
     //This is the temp one
     let task = document.getElementById('-1');
+
     if (task) {
         // Replace the old ID with the new one
         task.id = `_` + newId.toString();
@@ -210,7 +187,8 @@ function SetUnassigned(newId) {
 
 
 testB.addEventListener('click', async function() {
-    let key = -1; //Will be added on latter
+    //The key of -1 is a item not in the database
+    let key = -1; 
 
     if(neoNotSet === true){
         return;
@@ -243,25 +221,12 @@ testB.addEventListener('click', async function() {
                 newButton.parentNode.removeChild(newButton);
                 neoNotSet = false;
             } else {
-                //Create it and change the ids
-                
-
-                //Get the key and set it
-                // number++
-
-                
+                //Create it and change the ids         
                 await CreateDoc(textElement.textContent);
-
-                // key = 5151151151;
-
-
-
-                // SetUnassigned(key);
                 neoNotSet = false;
             }
             // Make the text non-editable again
             textElement.contentEditable = 'false';
-            // textElement.removeEventListener('focusout', onFocusOut);
         });
     }, {once: true});
 });
@@ -274,28 +239,23 @@ testB.addEventListener('click', async function() {
 async function LoadTodos() {
     return http.get(URL)
         .then(response => {
-            console.log(response.task);
-            // let json = JSON.parse(response);
+            // console.log(response.task);
             
             for(let i = 0; i < response.task.length; i++){
                 // console.log(response.task[i]);
                 let strKey = `_` + response.task[i]._id;
                 list.innerHTML +=  MakeTodo(strKey, response.task[i].name, response.task[i].completed);
-
             }
-
-
         })
         .catch(error => {
-        console.error(`Error: ${error}`)
+        console.error(`Error: ${error}`);
     });
 }
 
 async function Update(key, text, status){
     return http.put(URL, {key, text, status})
     .then(response => {
-        console.log(response);
-        
+        // console.log(response);
     })
     .catch(error => {
         console.error(`Error: ${error}`);
@@ -316,7 +276,7 @@ async function CreateDoc(text){
 async function Remove(key){
     return http.delete(`${URL}/${key}`)
     .then(response => {
-        console.log(response)
+        // console.log(response);
     })
     .catch(error => {
         console.error(`Error: ${error}`);
@@ -325,8 +285,6 @@ async function Remove(key){
 
 async function main(){
     await LoadTodos();
-
-
 }
   
 

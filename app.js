@@ -16,14 +16,6 @@ const tasks = require("./task.js");
 app.use(express.static("./Client"));
 
 
-// let testData = [
-//     "primaryKey" = [
-//         "Status"  = true,
-//         "Text" = "Lorem"
-//     ]
-// ]
-
-
 /**
  * Need:
  * get: get info out
@@ -44,12 +36,6 @@ app.get("/api", async(req,res) => {
 });
 
 
-    // let data = ["Hello world!"];
-    // if (data === -1) {
-    //     res.status(400).send();
-    //     return;
-    // }
-    // res.status(200).send(data);
 
 //Post, adds a new item, also sends back the new id of a obj
 app.post("/api", async(req,res) => {
@@ -62,7 +48,7 @@ app.post("/api", async(req,res) => {
 
     try {
         const savedTask = await newTask.save();
-        console.log(savedTask);
+        // console.log(savedTask);
         res.status(200).json(savedTask);
     } catch (error) {
         res.status(500).json({msg: error});
@@ -72,18 +58,12 @@ app.post("/api", async(req,res) => {
 
 //Put, updates the item
 app.put("/api", async(req,res) => {
-    // let jsonString = JSON.stringify(req.body);
-    console.log(req.body.key);
-    // let namu = req.body.text;
-    // let stat = req.body.status;
+    // console.log(req.body.key);
     let update = {name: req.body.text, completed: req.body.status};
-    // update[name] = req.body.text;
-    // update[completed] = req.body.status;
-
 
     try{
         const updatedTask = await tasks.findByIdAndUpdate({_id: req.body.key}, update,  { new: true })
-        console.log(updatedTask);
+        // console.log(updatedTask);
         res.status(200).json(updatedTask);
     } catch (error){
         res.status(500).json({msg: error});
@@ -95,7 +75,7 @@ app.put("/api", async(req,res) => {
 //Removes a item from the list
 app.delete("/api/:key", async(req,res) => {
     const key = req.params.key;
-    console.log(key);
+    // console.log(key);
 
     try {
         const deletedTask = await tasks.findByIdAndDelete(key);
@@ -126,9 +106,3 @@ const start = async () => {
 };
 
 start();
-
-
-
-// app.listen(port, () => {
-//     console.log(`App ${appName} is running on port ${port}`);
-// })
